@@ -90,7 +90,7 @@
                         <schema>public</schema>
                     </schemas>
                     <locations>
-                        <location>filesystem:src/main/resources/db/migration</location>
+                        <location>filesystem:resources/db/migration</location>
                     </locations>
                 </configuration>
             </plugin>
