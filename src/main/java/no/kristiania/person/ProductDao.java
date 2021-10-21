@@ -20,6 +20,9 @@ public class ProductDao extends AbstractDao<Product> {
     protected Product rowToObject(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getLong("id"));
+        product.setProductName(rs.getString("product_name"));
+        product.setPrice(rs.getInt("product_price"));
+        product.setDescription(rs.getString("product_description"));
         return product;
     }
 
@@ -49,11 +52,13 @@ public class ProductDao extends AbstractDao<Product> {
     }
 
     public Product retrieve(long id) throws SQLException {
-        return super.retrieve("SELECT * FROM people WHERE  = ?", id);
+        return super.retrieve("SELECT * FROM product WHERE  = ?", id);
     }
 
     @Override
     public List<Product> listAll() throws SQLException {
-        return super.listAll("SELECT * FROM people");
+        return super.listAll("SELECT * FROM product");
     }
+
+
 }

@@ -24,8 +24,8 @@ public class PersonnelServer {
         logger.info("Started server");
         DataSource dataSource = createDataSource();
         CategoryDao categoryDao = new CategoryDao(dataSource);
-        categoryDao.save("Women 1");
-        categoryDao.save("Men 2");
+        ProductDao productDao = new ProductDao(dataSource);
+        Product product = new Product();
 
         // server.addController("/api/roleOptions", new RoleOptionsController(new CategoryDao(dataSource)));
         // server.addController("/api/newPerson", new CreatePersonController(new ProductDao(dataSource)));
@@ -41,8 +41,6 @@ public class PersonnelServer {
                 case "01":
                     String result;
                     System.out.println("Enter product name");
-                    ProductDao productDao = new ProductDao(dataSource);
-                    Product product = new Product();
                     result = scanner.nextLine();
                     product.setProductName(result);
                     System.out.println("Add description");
@@ -53,22 +51,36 @@ public class PersonnelServer {
                     product.setPrice(Integer.parseInt(result));
 
                     chooseCategory(productDao, product, dataSource, result,scanner);
-                    showAlternatives(input, scanner);
+                    System.out.println("Saved" + result);
+                    input = showAlternatives(scanner);
                     break;
                 case "02":
-                    showAlternatives(input, scanner);
+                    System.out.println("Enter category name");
+                    result = scanner.nextLine();
+                    categoryDao.save(result);
+                    System.out.println("Saved " + result);
+                    input = showAlternatives(scanner);
                     break;
                 case "03":
-                    showAlternatives(input, scanner);
+                    List<String> category = categoryDao.listAll();
+                    for (String c : category ) System.out.println(c);
+                    System.out.println("--------------------");
+                    input = showAlternatives(scanner);
                     break;
                 case "04":
-                    showAlternatives(input, scanner);
+                    List<Product> productList = productDao.listAll();
+                    System.out.println(productList.toString());
+                    for(Product p : productList){
+                        System.out.println(p.getProductName());
+                    }
+                    System.out.println("--------------------");
+                    input = showAlternatives(scanner);
                     break;
                 case "05":
-                    showAlternatives(input, scanner);
+                    input = showAlternatives(scanner);
                     break;
                 default:
-                    showAlternatives(input, scanner);
+                    input = showAlternatives(scanner);
                     break;
 
             }
@@ -88,18 +100,17 @@ public class PersonnelServer {
         product.setCategoryId(categoryDao.retrieveName(input));
         productDao.save(product);
 
-
-
     }
 
-    private static void showAlternatives(String input, Scanner scanner) {
+    private static String showAlternatives(Scanner scanner) {
+        String input;
         System.out.println("01 Add product");
         System.out.println("02 Add categories");
         System.out.println("03 List categories");
         System.out.println("04 List all products");
         System.out.println("05 List all products by category");
         System.out.println("Write !q to quit");
-        input = scanner.nextLine();
+        return scanner.nextLine();
     }
     private static void showAlternatives() {
         System.out.println("01 Add product");

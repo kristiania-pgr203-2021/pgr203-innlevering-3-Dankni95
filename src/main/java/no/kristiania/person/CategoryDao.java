@@ -20,7 +20,6 @@ public class CategoryDao extends AbstractDao<String>  {
 
     @Override
     protected Long rowToObjectId(ResultSet rs) throws SQLException {
-        System.out.println(rs.getInt("id"));
         return rs.getLong("id");
     }
 
