@@ -114,7 +114,7 @@ public class PersonnelServer {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setUrl(("jdbc:postgresql://localhost:5432/person_db"));
         dataSource.setUser("person_dbuser");
-        dataSource.setPassword("testingPasswordLOL");
+        dataSource.setPassword("c=v^##3&bw@FvKdm!s");
         Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
