@@ -2,11 +2,7 @@ package no.kristiania.http;
 
 public class Category {
     private String categoryName;
-    private Long id;
-
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
-    }
+    private Integer id;
 
     public String getCategoryName() {
         return categoryName;
@@ -16,11 +12,11 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

@@ -1,24 +1,29 @@
 package no.kristiania.person;
 
-import no.kristiania.http.Product;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryDao extends AbstractDao<String> {
+public class CategoryDao extends AbstractDao<String>  {
     public CategoryDao(DataSource dataSource) {
         super(dataSource);
     }
+
 
     @Override
     protected String rowToObject(ResultSet rs) throws SQLException {
         return rs.getString("category_name");
     }
+
+    @Override
+    protected Long rowToObjectId(ResultSet rs) throws SQLException {
+        System.out.println(rs.getInt("id"));
+        return rs.getLong("id");
+    }
+
 
     public void save(String category) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
@@ -51,7 +56,7 @@ public class CategoryDao extends AbstractDao<String> {
                 }
             }
     }
-    public String retrieveName(String categoryName) throws SQLException {
+    public Long retrieveName(String categoryName) throws SQLException {
         return super.retrieveByName("SELECT id FROM category WHERE category_name = ?", categoryName);
     }
 }

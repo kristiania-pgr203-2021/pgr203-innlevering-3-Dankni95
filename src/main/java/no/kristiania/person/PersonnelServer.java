@@ -24,7 +24,8 @@ public class PersonnelServer {
         logger.info("Started server");
         DataSource dataSource = createDataSource();
         CategoryDao categoryDao = new CategoryDao(dataSource);
-        categoryDao.save("Kategori 1");
+        categoryDao.save("Women 1");
+        categoryDao.save("Men 2");
 
         // server.addController("/api/roleOptions", new RoleOptionsController(new CategoryDao(dataSource)));
         // server.addController("/api/newPerson", new CreatePersonController(new ProductDao(dataSource)));
@@ -53,7 +54,6 @@ public class PersonnelServer {
 
                     chooseCategory(productDao, product, dataSource, result,scanner);
                     showAlternatives(input, scanner);
-                    input = scanner.nextLine();
                     break;
                 case "02":
                     showAlternatives(input, scanner);
@@ -85,8 +85,10 @@ public class PersonnelServer {
         List<String> category = categoryDao.listAll();
         for (String c : category ) System.out.println(c);
         input = sc.nextLine();
+        product.setCategoryId(categoryDao.retrieveName(input));
+        productDao.save(product);
 
-        System.out.println(categoryDao.retrieveName(input));
+
 
     }
 

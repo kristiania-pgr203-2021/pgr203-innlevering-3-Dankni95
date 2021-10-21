@@ -1,5 +1,6 @@
 package no.kristiania.person;
 
+import no.kristiania.http.Category;
 import no.kristiania.http.Product;
 
 import javax.sql.DataSource;
@@ -19,8 +20,12 @@ public class ProductDao extends AbstractDao<Product> {
     protected Product rowToObject(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getLong("id"));
-
         return product;
+    }
+
+    @Override
+    protected Long rowToObjectId(ResultSet rs) throws SQLException {
+        return null;
     }
 
     public void save(Product product) throws SQLException {
