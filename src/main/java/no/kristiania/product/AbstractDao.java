@@ -1,6 +1,4 @@
-package no.kristiania.person;
-
-import no.kristiania.http.Category;
+package no.kristiania.product;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -29,23 +27,11 @@ public abstract class AbstractDao<T> {
         }
     }
 
-    protected Long retrieveByName(String sql, String name) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, name);
-                try (ResultSet rs = statement.executeQuery()) {
-                    rs.next();
-                    return rowToObjectId(rs);
-                }
-            }
-        }
-    }
-
 
     protected abstract T rowToObject(ResultSet rs) throws SQLException;
-    protected abstract Long rowToObjectId(ResultSet rs) throws SQLException;
 
     public abstract List<T> listAll() throws SQLException;
+
 
     protected List<T> listAll(String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
@@ -60,4 +46,5 @@ public abstract class AbstractDao<T> {
             }
         }
     }
+
 }

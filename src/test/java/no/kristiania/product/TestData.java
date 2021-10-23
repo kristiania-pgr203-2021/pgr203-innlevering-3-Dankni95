@@ -1,4 +1,4 @@
-package no.kristiania.person;
+package no.kristiania.product;
 
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;

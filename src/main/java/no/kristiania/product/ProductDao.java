@@ -1,6 +1,5 @@
-package no.kristiania.person;
+package no.kristiania.product;
 
-import no.kristiania.http.Category;
 import no.kristiania.http.Product;
 
 import javax.sql.DataSource;
@@ -9,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDao extends AbstractDao<Product> {
@@ -23,13 +23,10 @@ public class ProductDao extends AbstractDao<Product> {
         product.setProductName(rs.getString("product_name"));
         product.setPrice(rs.getInt("product_price"));
         product.setDescription(rs.getString("product_description"));
+        product.setCategoryId(rs.getLong("category_id"));
         return product;
     }
 
-    @Override
-    protected Long rowToObjectId(ResultSet rs) throws SQLException {
-        return null;
-    }
 
     public void save(Product product) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
@@ -51,13 +48,33 @@ public class ProductDao extends AbstractDao<Product> {
         }
     }
 
-    public Product retrieve(long id) throws SQLException {
-        return super.retrieve("SELECT * FROM product WHERE  = ?", id);
+    protected List<Product> listProductsByCategory(String sql, Long id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, id);
+                try (ResultSet rs = statement.executeQuery()) {
+                    List<Product> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(rowToObject(rs));
+                    }
+                    return result;
+                }
+            }
+        }
     }
+
+    public Product retrieve(long id) throws SQLException {
+        return super.retrieve("SELECT * FROM product WHERE id =  ?", id);
+    }
+
 
     @Override
     public List<Product> listAll() throws SQLException {
         return super.listAll("SELECT * FROM product");
+    }
+
+    public List<Product> listProductsByCategory(Long id) throws SQLException {
+        return listProductsByCategory("SELECT * FROM product WHERE category_id =  ?", id);
     }
 
 

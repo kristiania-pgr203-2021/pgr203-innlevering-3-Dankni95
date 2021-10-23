@@ -1,4 +1,4 @@
-package no.kristiania.person;
+package no.kristiania.product;
 
 import no.kristiania.http.Category;
 import no.kristiania.http.Product;
@@ -8,12 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class PersonnelServer {
     private static final Logger logger = LoggerFactory.getLogger(PersonnelServer.class);
@@ -26,10 +25,8 @@ public class PersonnelServer {
         CategoryDao categoryDao = new CategoryDao(dataSource);
         ProductDao productDao = new ProductDao(dataSource);
         Product product = new Product();
+        Category category = new Category();
 
-        // server.addController("/api/roleOptions", new RoleOptionsController(new CategoryDao(dataSource)));
-        // server.addController("/api/newPerson", new CreatePersonController(new ProductDao(dataSource)));
-        // server.addController("/api/people", new ListPeopleController(new ProductDao(dataSource)));
         Scanner scanner = new Scanner(System.in);
 
 
@@ -50,33 +47,43 @@ public class PersonnelServer {
                     result = scanner.nextLine();
                     product.setPrice(Integer.parseInt(result));
 
-                    chooseCategory(productDao, product, dataSource, result,scanner);
-                    System.out.println("Saved" + result);
+                    chooseCategory(productDao, product, categoryDao, result, scanner);
                     input = showAlternatives(scanner);
                     break;
                 case "02":
                     System.out.println("Enter category name");
                     result = scanner.nextLine();
-                    categoryDao.save(result);
-                    System.out.println("Saved " + result);
+                    category.setCategoryName(result);
+                    categoryDao.save(category);
+                    System.out.println("Saved category " + result);
                     input = showAlternatives(scanner);
                     break;
                 case "03":
-                    List<String> category = categoryDao.listAll();
-                    for (String c : category ) System.out.println(c);
+                    List<Category> categories = categoryDao.listAll();
+                    for (Category c : categories) System.out.println(c.getCategoryName());
                     System.out.println("--------------------");
+                    System.out.println();
                     input = showAlternatives(scanner);
                     break;
                 case "04":
                     List<Product> productList = productDao.listAll();
-                    System.out.println(productList.toString());
-                    for(Product p : productList){
+                    for (Product p : productList) {
                         System.out.println(p.getProductName());
                     }
                     System.out.println("--------------------");
+                    System.out.println(" ");
                     input = showAlternatives(scanner);
                     break;
                 case "05":
+                    String userInput;
+                    System.out.println("Velg kategori: ");
+                    List<Category> categoryList = categoryDao.listAll();
+                    for (Category c : categoryList) System.out.println(c.getCategoryName());
+                    System.out.println("--------------------");
+                    userInput = scanner.nextLine();
+                    List<Product> matchingProducts = productDao.listProductsByCategory(categoryDao.retrieveCategoryIdByName(userInput));
+                    for (Product p : matchingProducts) System.out.println(p.getProductName());
+                    System.out.println("--------------------");
                     input = showAlternatives(scanner);
                     break;
                 default:
@@ -91,19 +98,40 @@ public class PersonnelServer {
 
     }
 
-    private static void chooseCategory(ProductDao productDao, Product product, DataSource dataSource,String input, Scanner sc) throws SQLException {
-        CategoryDao categoryDao = new CategoryDao(dataSource);
-        System.out.println("Choose category from list below");
-        List<String> category = categoryDao.listAll();
-        for (String c : category ) System.out.println(c);
-        input = sc.nextLine();
-        product.setCategoryId(categoryDao.retrieveName(input));
+    private static void chooseCategory(ProductDao productDao, Product product, CategoryDao categoryDao, String input, Scanner sc) throws SQLException {
+
+        if (categoryDao.listAll().isEmpty()) {
+            addCategory(product, sc, categoryDao, productDao);
+        } else {
+            System.out.println("Choose category from list below");
+            List<Category> category = categoryDao.listAll();
+            for (Category c : category) System.out.println(c.getCategoryName());
+            input = sc.nextLine();
+            product.setCategoryId(categoryDao.retrieveCategoryIdByName(input));
+            productDao.save(product);
+            logger.info("Saved product: " + product.getProductName());
+            System.out.println("--------------------");
+            System.out.println(" ");
+        }
+
+    }
+
+    private static void addCategory(Product product, Scanner scanner, CategoryDao categoryDao, ProductDao productDao) throws SQLException {
+        String result;
+
+        System.out.println("Enter category name");
+        result = scanner.nextLine();
+        Category category = new Category();
+        category.setCategoryName(result);
+        categoryDao.save(category);
+        product.setCategoryId(categoryDao.retrieveCategoryIdByName(result));
         productDao.save(product);
+        logger.info("Saved product: " + product.getProductName());
+        System.out.println("--------------------");
 
     }
 
     private static String showAlternatives(Scanner scanner) {
-        String input;
         System.out.println("01 Add product");
         System.out.println("02 Add categories");
         System.out.println("03 List categories");
@@ -112,6 +140,7 @@ public class PersonnelServer {
         System.out.println("Write !q to quit");
         return scanner.nextLine();
     }
+
     private static void showAlternatives() {
         System.out.println("01 Add product");
         System.out.println("02 Add categories");
@@ -122,13 +151,20 @@ public class PersonnelServer {
     }
 
     private static DataSource createDataSource() throws IOException {
-
-
+        InputStream input = new FileInputStream("src/main/resources/conf/application.properties");
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl(("jdbc:postgresql://localhost:5432/person_db"));
-        dataSource.setUser("person_dbuser");
-        dataSource.setPassword("c=v^##3&bw@FvKdm!s");
-        Flyway.configure().dataSource(dataSource).load().migrate();
+        Properties env = new Properties();
+
+        env.load(input);
+
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUser(env.getProperty("db.user"));
+        dataSource.setPassword(env.getProperty("db.password"));
+        logger.info("Authorizing...");
+
+        boolean connectionEstablished = Flyway.configure().dataSource(dataSource).load().migrate().warnings.isEmpty();
+        if (connectionEstablished) logger.info("Connected...");
         return dataSource;
+
     }
 }

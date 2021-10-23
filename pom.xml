@@ -56,42 +56,9 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>no.kristiania.person.PersonnelServer</Main-Class>
+                            <Main-Class>no.kristiania.product.PersonnelServer</Main-Class>
                         </manifestEntries>
                     </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>8.0.2</version>
-
-                <!-- Note that we're executing the Flyway
-                     plugin in the "generate-sources" phase -->
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>migrate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-                <!-- Note that we need to prefix the db/migration
-                     path with filesystem: to prevent Flyway
-                     from looking for our migration scripts
-                     only on the classpath -->
-                <configuration>
-                    <baselineOnMigrate>true</baselineOnMigrate>
-                    <url>jdbc:postgresql://localhost:5432/person_db</url>
-                    <user>person_dbuser</user>
-                    <password>c=v^##3&amp;bw@FvKdm!s</password>
-                    <schemas>
-                        <schema>public</schema>
-                    </schemas>
-                    <locations>
-                        <location>filesystem:resources/db/migration</location>
-                    </locations>
                 </configuration>
             </plugin>
 
