@@ -1,3 +1,6 @@
+![example workflow](https://github.com/kristiania-pgr203-2021/pgr203-innlevering-3-Dankni95/actions/workflows/maven.yml/badge.svg)
+
+
 # Innlevering 3: JDBC
 
 ## Oppgave
