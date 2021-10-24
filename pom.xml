@@ -56,7 +56,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>no.kristiania.product.PersonnelServer</Main-Class>
+                            <Main-Class>no.kristiania.product.ProductsServer</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

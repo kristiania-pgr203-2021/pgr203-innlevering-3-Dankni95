@@ -1,7 +1,5 @@
 package no.kristiania.product;
 
-import no.kristiania.http.Category;
-import no.kristiania.http.Product;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import java.sql.SQLException;

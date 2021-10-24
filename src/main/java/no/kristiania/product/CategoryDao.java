@@ -1,6 +1,5 @@
 package no.kristiania.product;
 
-import no.kristiania.http.Category;
 
 import javax.sql.DataSource;
 import java.sql.*;

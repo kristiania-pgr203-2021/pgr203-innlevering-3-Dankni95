@@ -1,4 +1,4 @@
-package no.kristiania.http;
+package no.kristiania.product;
 
 public class Product {
     private String productName;

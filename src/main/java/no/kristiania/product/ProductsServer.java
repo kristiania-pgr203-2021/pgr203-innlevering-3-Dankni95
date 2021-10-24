@@ -1,7 +1,5 @@
 package no.kristiania.product;
 
-import no.kristiania.http.Category;
-import no.kristiania.http.Product;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
@@ -14,8 +12,8 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.*;
 
-public class PersonnelServer {
-    private static final Logger logger = LoggerFactory.getLogger(PersonnelServer.class);
+public class ProductsServer {
+    private static final Logger logger = LoggerFactory.getLogger(ProductsServer.class);
 
     public static void main(String[] args) throws IOException, SQLException {
 

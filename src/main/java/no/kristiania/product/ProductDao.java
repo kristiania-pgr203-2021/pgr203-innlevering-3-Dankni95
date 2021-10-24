@@ -1,7 +1,5 @@
 package no.kristiania.product;
 
-import no.kristiania.http.Product;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
