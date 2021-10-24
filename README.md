@@ -35,7 +35,7 @@ Det anbefales at dere benytter (remote) pair programming for innlevering 3 og jo
   * [x] Github Actions rapporterer at 100% av testene kjører grønt
   * [x] GitHub Actions skal ha `timeout` på bygget
   * [x] Github Actions bruker Java 11
-  * [ ] README viser GitHub Actions status badge
+  * [x] README viser GitHub Actions status badge
 * Kode
   * [x] Koden skal være korrekt strukturert etter Maven sine standarder (koden skal ligge under `src/main/java` og tester under `src/test/java`)
   * [x] Klassene skal ligge i Java packages
